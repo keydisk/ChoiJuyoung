@@ -1,0 +1,6 @@
+framework module Pods_JuYoungChoiTests {
+  umbrella header "Pods-JuYoungChoiTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+framework module Pods_JuYoungChoi {
+  umbrella header "Pods-JuYoungChoi-umbrella.h"
+
+  export *
+  module * { export * }
+}
