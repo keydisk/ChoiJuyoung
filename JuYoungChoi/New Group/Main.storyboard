@@ -30,7 +30,7 @@
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="MainViewController" customModule="PlaywingsTest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="MainViewController" customModule="JuYoungChoi" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -39,7 +39,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="brewCell" rowHeight="100" id="u3h-ws-CLG" customClass="ListCellTableViewCell" customModule="PlaywingsTest" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="brewCell" rowHeight="100" id="u3h-ws-CLG" customClass="ListCellTableViewCell" customModule="JuYoungChoi" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="u3h-ws-CLG" id="KFb-Qe-VeH">
@@ -102,13 +102,26 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Gfs-W9-640"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2SG-ME-9jP">
+                                <rect key="frame" x="10" y="617" width="100" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Bak-bn-TZ6"/>
+                                    <constraint firstAttribute="width" constant="100" id="cAm-5b-MVE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="Recommend">
+                                    <color key="titleColor" red="1" green="0.47859324819999999" blue="0.44857500169999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="2SG-ME-9jP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="B6S-4b-qaD"/>
                             <constraint firstItem="INZ-Ac-uFf" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="POu-NW-KIZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="INZ-Ac-uFf" secondAttribute="trailing" id="QJG-AP-6T7"/>
                             <constraint firstItem="INZ-Ac-uFf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="SaP-RK-9R8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="INZ-Ac-uFf" secondAttribute="bottom" id="oR0-1b-cvj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="2SG-ME-9jP" secondAttribute="bottom" constant="10" id="tOp-g8-H6d"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -126,7 +139,7 @@
         <!--Detail Item View Controller-->
         <scene sceneID="Iyg-9w-clw">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="2RG-xT-NoO" customClass="DetailItemViewController" customModule="PlaywingsTest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailItemViewControllerID" automaticallyAdjustsScrollViewInsets="NO" id="2RG-xT-NoO" customClass="DetailItemViewController" customModule="JuYoungChoi" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fhg-EA-06d">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

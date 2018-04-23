@@ -22,6 +22,7 @@ class NetworkConstants {
 enum APIRouter: URLRequestConvertible {
     
     case beerList(Parameters)
+    case randomBrew
     case login(Parameters)
     
     func asURLRequest() throws -> URLRequest {
@@ -33,6 +34,8 @@ enum APIRouter: URLRequestConvertible {
             case .beerList(let parameters) :
                 
                 return ("/beers", .get, parameters)
+            case .randomBrew :
+                return ("/beers/random", .get, nil)
             default :
                 return ("/openapi/app/v2/bootstrap", .get, nil)
             }
@@ -85,10 +88,23 @@ class APIClient {
         self.sessionManager = SessionManager(configuration: configuration)
     }
     
-    public func requestJson(parameter: Parameters, completion: @escaping (APIResult<JSON>) -> Void) {
+    public func requestBrewList(parameter: Parameters, completion: @escaping (APIResult<JSON>) -> Void) {
         
         self.requestJSON(APIRouter.beerList(parameter)) { (json, error) in
 
+            self.defaultApiResponseHandler(json: json, error: error, completion: completion)
+        }
+    }
+    
+    /// 랜덤 음료 요청
+    ///
+    /// - Parameters:
+    ///   - parameter: 파라매터
+    ///   - completion: 콜백 메소드
+    public func requestRandomBrew(parameter: Parameters? = nil, completion: @escaping (APIResult<JSON>) -> Void) {
+        
+        self.requestJSON(APIRouter.randomBrew) { (json, error) in
+            
             self.defaultApiResponseHandler(json: json, error: error, completion: completion)
         }
     }

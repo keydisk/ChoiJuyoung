@@ -28,7 +28,7 @@ class MainViewModel: NSObject {
         parameter["page"]     = pageNo
         parameter["per_page"] = perPage
         
-        APIClient.shared.requestJson(parameter: parameter, completion: {result in
+        APIClient.shared.requestBrewList(parameter: parameter, completion: {result in
             
             switch result {
             case .success(let result) :
@@ -43,12 +43,42 @@ class MainViewModel: NSObject {
                     failCallBack(error.code)
                     break
                 case .unexpectedStatusCode(statusCode: let errorStatusCd, message: let errorDescription) :
-                    debugPrint("unexpectedStatusCode errorDescription : \(errorStatusCd)")
+                    debugPrint("unexpectedStatusCode errorDescription : \(errorStatusCd)\ndescription : \(errorDescription)")
                     
                     failCallBack(errorStatusCd)
                     break
                 }
             }
         })
+    }
+    
+    public func loadRandomData(successCallBack: @escaping( (_ result: JSON) -> Void), failCallBack: @escaping( (_ errorCd: Int) -> Void)) {
+        
+        APIClient.shared.requestRandomBrew(completion: {result in
+            
+            switch result {
+            case .success(let result) :
+                
+                var rtnData = result
+                rtnData["type"] = "random"
+                
+                successCallBack(result)
+                break
+            case .failure(let apiError) :
+                
+                switch apiError {
+                case .networkError(error: let error as NSError) :
+                    
+                    failCallBack(error.code)
+                    break
+                case .unexpectedStatusCode(statusCode: let errorStatusCd, message: let errorDescription) :
+                    debugPrint("unexpectedStatusCode errorDescription : \(errorStatusCd)\ndescription : \(errorDescription)")
+                    
+                    failCallBack(errorStatusCd)
+                    break
+                }
+            }
+        })
+        
     }
 }

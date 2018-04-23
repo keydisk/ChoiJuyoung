@@ -37,6 +37,9 @@ class DetailItemViewController: BaseViewController {
     let pictureCellIdentifer   = "pictureCellIdentifer"
     let contentsCellIdentifier = "contentsCellIdentifier"
     
+    /// 상세보기 호출시 전달 될 수 있는 정보
+    public var recieveData: JSON?
+    
     /// 음료 리스트 구독
     private func brewItemSubscribe() {
         
@@ -70,7 +73,28 @@ class DetailItemViewController: BaseViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.navigationTitle = "상세보기"
-        self.viewModel.setCommand(DetailViewCommand.loadDetailData)
+        
+        if self.recieveData == nil {
+            
+            self.viewModel.setCommand(DetailViewCommand.loadDetailData)
+        }
+        
+        if self.isModal() {
+            
+            /// top right 버튼 그리기
+            let rightBtnImg = UIImage(named: "close")
+            let rightTopBtn = UIButton(type: .custom)
+            
+            let rightBtnSize = (self.view.frame.size.width * 0.085333333333333)
+            
+            rightTopBtn.frame = CGRect(x: self.view.frame.size.width - (self.view.frame.size.width * 0.106666666666667),
+                                       y: (self.navigationController!.navigationBar.frame.size.height - rightBtnSize) / 2,
+                                       width: rightBtnSize, height: rightBtnSize)
+            rightTopBtn.setImage(rightBtnImg, for: UIControlState.normal)
+            rightTopBtn.addTarget(self, action: #selector(closeView), for: UIControlEvents.touchUpInside)
+            
+            self.navigationController?.navigationBar.addSubview(rightTopBtn)
+        }
         
         self.brewItemSubscribe()
         self.registCell()
@@ -118,7 +142,7 @@ extension DetailItemViewController: UITableViewDelegate, UITableViewDataSource {
 
             return 420
         default: // contents or title
-
+            
             return UITableViewAutomaticDimension
         }
     }
@@ -131,9 +155,16 @@ extension DetailItemViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
-            if indexPath.row == DetailItemList.goodsImg.rawValue {
+            if dataSource.count != 0 && indexPath.row == DetailItemList.goodsImg.rawValue {
                 
                 CustomToastMessage.GetInstance().ShowMessage("image url : \(dataSource["imgUrl"].stringValue) ")
+            }
+            else {
+                
+                if self.recieveData != nil {
+                    
+                    CustomToastMessage.GetInstance().ShowMessage("image url : \(self.recieveData!["imgUrl"].stringValue) ")
+                }
             }
         }
         catch _ {
@@ -144,15 +175,25 @@ extension DetailItemViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         do {
-
-            guard let dataSource = try self.viewModel.detailItem?.value() else {
+            var dataSource: JSON! = nil
+            
+            if self.recieveData != nil {
                 
-                let cell = tableView.dequeueReusableCell(withIdentifier: self.titleCellIdentifer, for: indexPath)     as! TitleCellCell
+                dataSource = self.recieveData
+            }
+            else {
                 
-                cell.titleText = ""
-                cell.selectionStyle = .none
+                guard let tmpDataSource = try self.viewModel.detailItem?.value() else {
+                    
+                    let cell = tableView.dequeueReusableCell(withIdentifier: self.titleCellIdentifer, for: indexPath)     as! TitleCellCell
+                    
+                    cell.titleText = ""
+                    cell.selectionStyle = .none
+                    
+                    return cell
+                }
                 
-                return cell
+                dataSource = tmpDataSource
             }
             
             debugPrint("indexPath.row : \(indexPath.row)")

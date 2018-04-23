@@ -15,6 +15,7 @@ import SwiftyJSON
 enum MainCommand: Command {
     
     case loadBrewList(pageNo: Int?, perPage: Int)
+    case recommendBrew
     
     func excute() {
         
@@ -31,13 +32,16 @@ class MainViewController: BaseViewController {
     let viewModel = MainViewMV()
     let perPage:Int = 10
     
+    /// navigation right button
+    weak var rightTopBtn: UIButton!
+    
     //MARK: - Methods~
     /// 음료 리스트 구독
     private func brewListSubscribe() {
         
         _ = self.viewModel.brewList?.subscribe({ (result) in
             
-            switch result {    
+            switch result {
             case .completed :
                 break
             case .error( let error as NSError ) :
@@ -47,9 +51,10 @@ class MainViewController: BaseViewController {
                 break
             case .next( let element ) :
                 
+                self.stopIndigator()
+                
                 if element.count > 0 {
                     
-                    self.stopIndigator()
                     self.tableView.reloadData()
                 }
                 
@@ -57,6 +62,56 @@ class MainViewController: BaseViewController {
             }
             
         })
+    }
+    
+    private func subscribeRandomBrew() {
+        
+        _ = self.viewModel.randomBrew?.subscribe( {result in
+            
+            switch result {
+            case .next(let element) :
+                
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let detailView  = storyboard.instantiateViewController(withIdentifier:"DetailItemViewControllerID") as! DetailItemViewController
+                
+                detailView.recieveData = element
+                let navigation = CustomNavigationController(rootViewController: detailView)
+                
+                self.present(navigation, animated: true, completion: nil)
+                
+                break
+            case .error( let error as NSError ) :
+                self.stopIndigator()
+                
+                CustomToastMessage.GetInstance().ShowMessage("error code : \(error.code)")
+                break
+            case .completed :
+                self.stopIndigator()
+                
+                CustomToastMessage.GetInstance().ShowMessage("데이터 없음")
+                
+                break
+            }
+        })
+    }
+    
+    /// top right 버튼 그리기
+    private func drawNavigationRightBtn() {
+        
+        let rightBtnImg = UIImage(named: "icon_error")
+        let rightTopBtn = UIButton(type: .custom)
+        
+        let rightBtnSize = (self.view.frame.size.width * 0.085333333333333)
+        
+        rightTopBtn.frame = CGRect(x: self.view.frame.size.width - (self.view.frame.size.width * 0.106666666666667),
+                                   y: (self.navigationController!.navigationBar.frame.size.height - rightBtnSize) / 2,
+                                   width: rightBtnSize, height: rightBtnSize)
+        rightTopBtn.setImage(rightBtnImg, for: UIControlState.normal)
+        rightTopBtn.addTarget(self, action: #selector(recommendBrew), for: UIControlEvents.touchUpInside)
+        
+        self.navigationController?.navigationBar.addSubview(rightTopBtn)
+        
+        self.rightTopBtn = rightTopBtn
     }
     
     override func viewDidLoad() {
@@ -71,7 +126,9 @@ class MainViewController: BaseViewController {
         
         self.viewModel.setCommand(MainCommand.loadBrewList(pageNo: nil, perPage: self.perPage))
         
+        self.drawNavigationRightBtn()
         self.brewListSubscribe()
+        self.subscribeRandomBrew()
     }
     
     override func didReceiveMemoryWarning() {
@@ -91,9 +148,23 @@ class MainViewController: BaseViewController {
                 
                 nextViewCtr.viewModel.selectIndex = selectIndex.intValue
             }
+            else if let selectData = sender as? JSON {
+                
+                let nextViewCtr = segue.destination as! DetailItemViewController
+                
+                nextViewCtr.recieveData = selectData
+            }
         }
     }
     
+    //MARK: - recommend brew
+    /// 음료 추천
+    func recommendBrew() {
+        
+        self.startIndigator()
+        
+        self.viewModel.setCommand(MainCommand.recommendBrew)
+    }
 }
 
 //MARK: - Implement TableView Delegate

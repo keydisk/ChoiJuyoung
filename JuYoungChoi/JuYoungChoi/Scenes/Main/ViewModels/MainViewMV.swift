@@ -21,6 +21,7 @@ class MainViewMV: CommonViewModel, CommonViewModelProtocol {
     /// 현재 로딩한 페이지 넘버
     var currentPageNo: Int = 0
     var brewList: BehaviorSubject<JSON>?
+    var randomBrew: PublishSubject<JSON>?
     
     let mainModel = MainViewModel()
     
@@ -29,7 +30,7 @@ class MainViewMV: CommonViewModel, CommonViewModelProtocol {
         let json = JSON()
         
         self.brewList = BehaviorSubject<JSON>(value: json)
-        
+        self.randomBrew = PublishSubject<JSON>()
         self.currentPageNo = currentPageNo
         
         super.init()
@@ -47,6 +48,10 @@ class MainViewMV: CommonViewModel, CommonViewModelProtocol {
         case .loadBrewList(pageNo: let pageNo, perPage: let perPage):
             
             self.loadData(pageNo: pageNo, perPage: perPage)
+            break
+        case .recommendBrew :
+            
+            self.loadRandomBew()
             break
         }
     }
@@ -86,6 +91,29 @@ class MainViewMV: CommonViewModel, CommonViewModelProtocol {
             
             let error = NSError()
             self.brewList?.onError(error)
+        })
+    }
+    
+    /// 랜덤 음료
+    private func loadRandomBew() {
+        
+        self.mainModel.loadRandomData(successCallBack: { result in
+            
+            if let randomBrew = result.array?.first {
+                
+                var recieveData = randomBrew
+                recieveData["imgUrl"] = recieveData["image_url"]
+                self.randomBrew?.onNext(recieveData)
+            }
+            else {
+                
+                self.randomBrew?.onCompleted()
+            }
+            
+        }, failCallBack: {errorCd in
+                
+            let error = NSError()
+            self.randomBrew?.onError(error)
         })
     }
 }
