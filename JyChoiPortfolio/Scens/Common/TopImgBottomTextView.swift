@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum IconType {
+    
     case useGuide
     case parking
     case secureAndEnter
@@ -19,6 +20,7 @@ struct TopImgBottomTextView: View {
     let buttonType: IconType
     var imgNm: String = ""
     var bottomText: String = ""
+    
     @Binding var selectType: IconType
     
     init(buttonType: IconType, selectType: Binding<IconType>) {
