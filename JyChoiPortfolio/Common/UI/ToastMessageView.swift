@@ -13,9 +13,6 @@ class ToastMessage: ObservableObject {
     
     @Published var msg = ""
     @Published var show = false
-    init() {
-        
-    }
     
     var timer: Timer?
     func setMessage(_ msg: String) {
