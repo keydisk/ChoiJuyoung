@@ -56,7 +56,7 @@ struct StoreCell: View {
             }.padding(.top, 10).padding(.bottom, 10).padding(.horizontal, 10)
             
             Rectangle().fill(Color.lightGray).frame(height: 1)
-        }.padding(.top, 10)
+        }.padding(.top, 10).background(Color.white)
     }
 }
 

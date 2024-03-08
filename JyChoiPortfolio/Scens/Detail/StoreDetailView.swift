@@ -47,6 +47,8 @@ struct StoreImgView: View {
 
 struct StoreDetailView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @State var imgListHeight: CGFloat = 100
     @State var model: StoreModel
     @State var tapBtn = false
@@ -264,10 +266,22 @@ struct StoreDetailView: View {
                 
                 self.storeInfoDescription = self.viewModel.storeInfo(self.selectType)
             }
-        }
+        }.navigationBarBackButtonHidden(true).navigationTitle(self.model.metaData.title).toolbar(content: {
+            
+            ToolbarItem(placement: .navigationBarLeading, content: {
+                Button {
+                    self.presentationMode.wrappedValue.dismiss()
+                } label:  {
+                    Image(systemName: "arrowshape.backward")
+                    Text("뒤로가기").foregroundColor(.black)
+                }
+                
+            })
+        })
     }
 }
 
 #Preview {
+    
     StoreDetailView(StoreModel(id: "0", storeImgList: [ImgElement(id: URL(string: "https://cdn.newsroad.co.kr/news/photo/202403/27876_39619_131.jpg")!), ImgElement(id:URL(string: "https://cdn.newsroad.co.kr/news/photo/202403/27855_39598_1410.jpg")!), ImgElement(id:URL(string: "https://cdn.newsroad.co.kr/news/photo/202402/27738_39450_5613.jpg")!) ], metaData: StorePointModel(id: "1", title: "올림픽 공원점", location: CLLocationCoordinate2D(latitude: 37.51545, longitude: 127.11487), thumbnailUrl: URL(string: "https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13223550&filePath=L2Rpc2sxL25ld2RhdGEvMjAxOS8yMS9DTFMxMDAwNC8xMzIyMzU1MF9XUlRfMjAxOTExMjFfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10004")!), address: "서울 송파구 백제고분로 505 B1층", tagList: [TagModel<Bool>(title: "다락 직영", id: "d1", metaData: false), TagModel<Bool>(title: "24시간", id: "d2", metaData: true), TagModel<Bool>(title: "무료주차", id: "d3", metaData: true)], minimumPrice: 70560, distance: 1480))
 }

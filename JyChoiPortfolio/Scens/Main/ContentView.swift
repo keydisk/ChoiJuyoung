@@ -10,7 +10,7 @@ import MapKit
 
 struct ContentView: View {
 
-    @StateObject var viewModel = MainViewModel()
+    @ObservedObject var viewModel = MainViewModel()
     
     @State var showMap = false
     var listHeight: CGFloat = 0

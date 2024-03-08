@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import SnapKit
 
 class ScrollViewCoordinator: NSObject, UIScrollViewDelegate {
     
@@ -49,17 +50,12 @@ struct PagingScrollView<Content: View>: UIViewRepresentable {
         
         let hostview = UIHostingController(rootView: content)
         
-        hostview.view.translatesAutoresizingMaskIntoConstraints = false
-        let constraints = [
-            hostview.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            hostview.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            hostview.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            hostview.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor ),
-            hostview.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
-        ]
-        
         scrollView.addSubview(hostview.view)
-        scrollView.addConstraints(constraints)
+        
+        hostview.view.snp.makeConstraints({m in
+            m.edges.equalToSuperview()
+            m.height.equalToSuperview()
+        })
         
         // 페이징 설정
         scrollView.isPagingEnabled = true

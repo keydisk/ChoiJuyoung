@@ -136,23 +136,6 @@ struct CustomMapView : UIViewRepresentable {
         self.map.delegate = self.coordiate
         self.locationManager.delegate = self.locationDelegate
         
-        self.map.addAnnotations(self.storeList.map({model -> StorePointAnnotationOnMap in
-            
-            StorePointAnnotationOnMap(id: model.id, title: model.metaData.title, locationName: model.address, coordinate: model.metaData.location, model: model)
-        }).compactMap({annotation -> MKAnnotation? in
-            
-            guard self.map.annotations.filter({ tmpModel -> Bool in
-                
-                (tmpModel as? StorePointAnnotationOnMap)?.id == annotation.id
-            }).count == 0 else {
-                
-                self.map.removeAnnotation(annotation)
-                return nil
-            }
-            
-            return annotation
-        }) )
-        
         self.coordiate.selectAnnotationObserver.filter({value in
             value?.model != nil
         }).map({value -> StoreModel in
@@ -172,7 +155,6 @@ struct CustomMapView : UIViewRepresentable {
         self.locationDelegate.locObserver.sink(receiveValue: {loc in
         }).store(in: &self.cancelable)
         
-        self.map.delegate = self.coordiate
         self.locationManager.delegate = self.locationDelegate
         
         let annotation = StorePointAnnotationOnMap(id: model.id, title: model.storeTitle, locationName: model.address, coordinate: model.loc, model: nil)
@@ -183,6 +165,7 @@ struct CustomMapView : UIViewRepresentable {
         
         let viewRegion = MKCoordinateRegion(center: self.currentLoc, latitudinalMeters: 1000, longitudinalMeters: 1000)
         
+        self.map.isRotateEnabled = false
         self.map.setRegion(viewRegion, animated: false)
         
         return self.map
@@ -190,6 +173,12 @@ struct CustomMapView : UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<CustomMapView>) {
         
+        uiView.removeAnnotations(uiView.annotations)
+        uiView.delegate = self.coordiate
+        uiView.addAnnotations(self.storeList.map({model -> StorePointAnnotationOnMap in
+            
+            StorePointAnnotationOnMap(id: model.id, title: model.metaData.title, locationName: model.address, coordinate: model.metaData.location, model: model)
+        }) )
     }
     
     /// 현재 위치 정보 가져오기
