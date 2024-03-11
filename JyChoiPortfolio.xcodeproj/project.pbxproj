@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0BAA0922B9E7A9D00B9E530 /* CommonConstValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BAA0912B9E7A9D00B9E530 /* CommonConstValue.swift */; };
+		C0BAA0952B9EA69E00B9E530 /* StoreImgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BAA0942B9EA69E00B9E530 /* StoreImgView.swift */; };
 		C0CED0E02B9A9A5F0087A793 /* ToastMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CED0DF2B9A9A5F0087A793 /* ToastMessageView.swift */; };
 		C0DAE83C2B9863E6007D194F /* JyChoiPortfolioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DAE83B2B9863E6007D194F /* JyChoiPortfolioApp.swift */; };
 		C0DAE83E2B9863E6007D194F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DAE83D2B9863E6007D194F /* ContentView.swift */; };
@@ -63,6 +65,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C0BAA0912B9E7A9D00B9E530 /* CommonConstValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonConstValue.swift; sourceTree = "<group>"; };
+		C0BAA0942B9EA69E00B9E530 /* StoreImgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreImgView.swift; sourceTree = "<group>"; };
 		C0CED0DF2B9A9A5F0087A793 /* ToastMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessageView.swift; sourceTree = "<group>"; };
 		C0CED0E12B9AD2950087A793 /* JyChoiPortfolio.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JyChoiPortfolio.entitlements; sourceTree = "<group>"; };
 		C0DAE8382B9863E6007D194F /* JyChoiPortfolio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JyChoiPortfolio.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +134,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0BAA0932B9EA68E00B9E530 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				C0BAA0942B9EA69E00B9E530 /* StoreImgView.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
 		C0DAE82F2B9863E6007D194F = {
 			isa = PBXGroup;
 			children = (
@@ -241,6 +253,7 @@
 			children = (
 				C0DAE8882B993002007D194F /* UI */,
 				C0DAE87A2B986CB0007D194F /* Extension */,
+				C0BAA0912B9E7A9D00B9E530 /* CommonConstValue.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -328,6 +341,7 @@
 		C0DAE8A42B99B898007D194F /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				C0BAA0932B9EA68E00B9E530 /* SubViews */,
 				C0DAE8A52B99B8AB007D194F /* StoreDetailView.swift */,
 			);
 			path = Detail;
@@ -497,6 +511,7 @@
 				C0DAE8A62B99B8AB007D194F /* StoreDetailView.swift in Sources */,
 				C0DAE8752B986894007D194F /* ApiConstants.swift in Sources */,
 				C0DAE87F2B986CE2007D194F /* StringExtension.swift in Sources */,
+				C0BAA0922B9E7A9D00B9E530 /* CommonConstValue.swift in Sources */,
 				C0DAE8992B99410B007D194F /* TagModel.swift in Sources */,
 				C0DAE8732B986894007D194F /* SearchAPIs.swift in Sources */,
 				C0DAE8922B993DD4007D194F /* IntExtension.swift in Sources */,
@@ -510,6 +525,7 @@
 				C0DAE8782B986AE1007D194F /* MainViewModel.swift in Sources */,
 				C0DAE88C2B9934B9007D194F /* RectangleModifier.swift in Sources */,
 				C0DAE8872B987449007D194F /* StoreModel.swift in Sources */,
+				C0BAA0952B9EA69E00B9E530 /* StoreImgView.swift in Sources */,
 				C0DAE88E2B9934D2007D194F /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

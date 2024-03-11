@@ -8,6 +8,13 @@
 import SwiftUI
 import MapKit
 
+#if DEBUG
+public struct ContentViewConstValue {
+    
+    static let scrollLabel = "ContentViewScrollLabel"
+}
+#endif
+
 struct ContentView: View {
 
     @ObservedObject var viewModel = MainViewModel()
@@ -56,6 +63,9 @@ struct ContentView: View {
                         StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1)
                     }
                 })
+                #if DEBUG
+                .accessibilityLabel(ContentViewConstValue.scrollLabel)
+                #endif
             }
             
             NavigationLink(destination: StoreDetailView(self.viewModel.selectModel!), isActive: self.$viewModel.moveDetailView, label: {}).hidden()

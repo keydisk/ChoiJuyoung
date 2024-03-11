@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import JyChoiPortfolio
 
 final class JyChoiPortfolioUITests: XCTestCase {
 
@@ -24,10 +25,35 @@ final class JyChoiPortfolioUITests: XCTestCase {
 
     func testExample() throws {
         // UI tests must launch the application that they test.
+        
         let app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let staticText = app.staticTexts["개의 다락 지점이 있습니다."]
+        staticText.tap()
+        
+        let element = app.scrollViews["ContentViewScrollLabel"]
+        
+        debugPrint("element.frame.origin.y : \(element.frame.origin.y)")
+        XCTAssert(element.frame.origin.y == 0)
+//        staticText.tap()
+//        XCTAssert(element.element.frame.origin.y == 0)
+    }
+    
+    func testScroll() throws {
+        // UI tests must launch the application that they test.
+        let app = XCUIApplication()
+        app.launch()
+        
+        app.collectionViews.children(matching: .cell).element(boundBy: 0).children(matching: .other).element(boundBy: 0).tap()
+        
+        let element = app.scrollViews.otherElements.scrollViews.children(matching: .other).element.children(matching: .other).element
+        
+        element.children(matching: .image).element(boundBy: 0).swipeLeft()
+        element.children(matching: .image).element(boundBy: 1).swipeLeft()
+        
+        XCTAssert(element.children(matching: .image).element(boundBy: 4).exists == false)
+        XCTAssert(element.children(matching: .image).element(boundBy: 4).exists == true)
     }
 
     func testLaunchPerformance() throws {
