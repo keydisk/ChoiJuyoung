@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Combine
 @testable import JyChoiPortfolio
 
 final class JyChoiPortfolioTests: XCTestCase {
@@ -32,6 +33,7 @@ final class JyChoiPortfolioTests: XCTestCase {
         self.mainViewModel.searchText = ""
         assert(self.mainViewModel.list.count == 5)
     }
+    
     
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

@@ -15,11 +15,13 @@ public struct ContentViewConstValue {
 }
 #endif
 
+/// 메인 뷰
 struct ContentView: View {
 
     @ObservedObject var viewModel = MainViewModel()
     
     @State var showMap = false
+    @State var showNfcReader = false
     var listHeight: CGFloat = 0
     
     private var region: MKCoordinateRegion {
@@ -60,6 +62,13 @@ struct ContentView: View {
                             Spacer()
                         }.padding(10).opacity(self.showMap ? 0 : 1)
                         
+                        VStack {
+                            Image(systemName: "doc.text.magnifyingglass")
+                            Text("NFC Reader")
+                        }.onTapGesture {
+                            self.showNfcReader.toggle()
+                        }
+                        
                         StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1)
                     }
                 })
@@ -69,6 +78,8 @@ struct ContentView: View {
             }
             
             NavigationLink(destination: StoreDetailView(self.viewModel.selectModel!), isActive: self.$viewModel.moveDetailView, label: {}).hidden()
+            
+            NavigationLink(destination: NFCReaderView(), isActive: self.$showNfcReader, label: {}).hidden()
             
             Spacer()
         }.onAppear {

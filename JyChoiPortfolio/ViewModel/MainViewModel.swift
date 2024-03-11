@@ -96,5 +96,7 @@ class MainViewModel: ObservableObject {
             self.selectModel = model
             self.moveDetailView = true
         }).store(in: &self.cancelationList)
+        
+        
     }
 }

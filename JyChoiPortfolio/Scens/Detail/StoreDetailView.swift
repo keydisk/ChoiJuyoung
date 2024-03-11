@@ -263,7 +263,7 @@ struct StoreDetailView: View {
                 } label:  {
                     Image(systemName: "arrowshape.backward")
                     Text("뒤로가기").foregroundColor(.black)
-                }
+                }.tint(.gray)
                 
             })
         }).overlay(content: {
