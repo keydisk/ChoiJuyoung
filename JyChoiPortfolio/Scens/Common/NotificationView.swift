@@ -44,13 +44,12 @@ class NotificationViewViewModel: ObservableObject {
 struct NotificationView: View {
     
     let url: String
-    @State var hidenView = false
+    @State var hidenView = true
     @ObservedObject var viewModel = NotificationViewViewModel()
     
     init(url: String, hidenView: Bool = false) {
         
         self.url = url
-        self.hidenView = !self.viewModel.getNotiShow
     }
     
     func hideNotificationView() {
@@ -91,7 +90,10 @@ struct NotificationView: View {
                     }
                 }.frame(height: 60)
             }.cornerRadius(20)
-        }.padding(.horizontal, 50).padding(.vertical, 100).background(Color(r: 125, g: 125, b: 125, a: 50)).opacity(self.hidenView ? 0 : 1)
+        }.padding(.horizontal, 50).padding(.vertical, 100).background(Color(r: 125, g: 125, b: 125, a: 50)).opacity(self.hidenView ? 0 : 1).onAppear(perform: {
+            
+            self.hidenView = self.viewModel.getNotiShow ? false : true
+        })
     }
 }
 
