@@ -21,12 +21,6 @@ struct StoreDetailModel {
         let description: String
     }
     
-    struct FaqInfo: Identifiable {
-        
-        let id: String
-        let description: String
-    }
-    
     let id: String
     let storeTitle: String
     let address: String
@@ -54,7 +48,7 @@ struct StoreDetailModel {
     let metroInfo: String
     let busInfo: String
     
-    let faqList: [FaqInfo]
+    let faqList: [RefeatModel< (String, String)>]
     
     let loc: CLLocationCoordinate2D
 }

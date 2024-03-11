@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C020D3D72B9EB971002D3E6B /* RefeatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3D62B9EB971002D3E6B /* RefeatModel.swift */; };
+		C020D3D92B9EBF84002D3E6B /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3D82B9EBF84002D3E6B /* NotificationView.swift */; };
+		C020D3DB2B9EBFE6002D3E6B /* CommonWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3DA2B9EBFE6002D3E6B /* CommonWebView.swift */; };
+		C020D3DD2B9EC512002D3E6B /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3DC2B9EC512002D3E6B /* DateExtension.swift */; };
 		C0BAA0922B9E7A9D00B9E530 /* CommonConstValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BAA0912B9E7A9D00B9E530 /* CommonConstValue.swift */; };
 		C0BAA0952B9EA69E00B9E530 /* StoreImgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BAA0942B9EA69E00B9E530 /* StoreImgView.swift */; };
 		C0CED0E02B9A9A5F0087A793 /* ToastMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CED0DF2B9A9A5F0087A793 /* ToastMessageView.swift */; };
@@ -65,6 +69,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C020D3D62B9EB971002D3E6B /* RefeatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefeatModel.swift; sourceTree = "<group>"; };
+		C020D3D82B9EBF84002D3E6B /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		C020D3DA2B9EBFE6002D3E6B /* CommonWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWebView.swift; sourceTree = "<group>"; };
+		C020D3DC2B9EC512002D3E6B /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		C0BAA0912B9E7A9D00B9E530 /* CommonConstValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonConstValue.swift; sourceTree = "<group>"; };
 		C0BAA0942B9EA69E00B9E530 /* StoreImgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreImgView.swift; sourceTree = "<group>"; };
 		C0CED0DF2B9A9A5F0087A793 /* ToastMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessageView.swift; sourceTree = "<group>"; };
@@ -134,6 +142,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C020D3D52B9EB964002D3E6B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C020D3D62B9EB971002D3E6B /* RefeatModel.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		C0BAA0932B9EA68E00B9E530 /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -242,6 +258,7 @@
 		C0DAE8762B9869DB007D194F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				C020D3D52B9EB964002D3E6B /* Common */,
 				C0DAE8772B986AE1007D194F /* MainViewModel.swift */,
 				C0DAE8AA2B99BB7C007D194F /* DetailViewModel.swift */,
 			);
@@ -273,6 +290,7 @@
 				C0DAE87C2B986CE2007D194F /* CollectionExtension.swift */,
 				C0DAE87D2B986CE2007D194F /* StringExtension.swift */,
 				C0DAE8912B993DD4007D194F /* IntExtension.swift */,
+				C020D3DC2B9EC512002D3E6B /* DateExtension.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -351,6 +369,8 @@
 			isa = PBXGroup;
 			children = (
 				C0DAE8B12B99E5F1007D194F /* TopImgBottomTextView.swift */,
+				C020D3D82B9EBF84002D3E6B /* NotificationView.swift */,
+				C020D3DA2B9EBFE6002D3E6B /* CommonWebView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -508,6 +528,7 @@
 				C0DAE88A2B993019007D194F /* RoundTextField.swift in Sources */,
 				C0DAE83C2B9863E6007D194F /* JyChoiPortfolioApp.swift in Sources */,
 				C0DAE89F2B998C15007D194F /* CustomMapView.swift in Sources */,
+				C020D3DD2B9EC512002D3E6B /* DateExtension.swift in Sources */,
 				C0DAE8A62B99B8AB007D194F /* StoreDetailView.swift in Sources */,
 				C0DAE8752B986894007D194F /* ApiConstants.swift in Sources */,
 				C0DAE87F2B986CE2007D194F /* StringExtension.swift in Sources */,
@@ -517,6 +538,7 @@
 				C0DAE8922B993DD4007D194F /* IntExtension.swift in Sources */,
 				C0DAE8AF2B99C920007D194F /* StoreDetailModel.swift in Sources */,
 				C0CED0E02B9A9A5F0087A793 /* ToastMessageView.swift in Sources */,
+				C020D3DB2B9EBFE6002D3E6B /* CommonWebView.swift in Sources */,
 				C0DAE8B22B99E5F1007D194F /* TopImgBottomTextView.swift in Sources */,
 				C0DAE8AD2B99BDD7007D194F /* ImgListModel.swift in Sources */,
 				C0DAE8B82B9A126E007D194F /* ActivityView.swift in Sources */,
@@ -524,9 +546,11 @@
 				C0DAE8902B993A6D007D194F /* StoreList.swift in Sources */,
 				C0DAE8782B986AE1007D194F /* MainViewModel.swift in Sources */,
 				C0DAE88C2B9934B9007D194F /* RectangleModifier.swift in Sources */,
+				C020D3D72B9EB971002D3E6B /* RefeatModel.swift in Sources */,
 				C0DAE8872B987449007D194F /* StoreModel.swift in Sources */,
 				C0BAA0952B9EA69E00B9E530 /* StoreImgView.swift in Sources */,
 				C0DAE88E2B9934D2007D194F /* ColorExtension.swift in Sources */,
+				C020D3D92B9EBF84002D3E6B /* NotificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

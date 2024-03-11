@@ -123,6 +123,7 @@ struct CustomMapView : UIViewRepresentable {
     var storeList: [StoreModel]
     var currentLoc: CLLocationCoordinate2D
     
+    let 석촌호수 = CLLocationCoordinate2D(latitude: 37.51005, longitude: 127.10280)
     init(_ storePointList: [StoreModel], _ selectPoint: PassthroughSubject<StoreModel, Never>) {
         
         self.storeList = storePointList
@@ -131,7 +132,7 @@ struct CustomMapView : UIViewRepresentable {
         self.locationDelegate.locObserver.sink(receiveValue: {loc in
         }).store(in: &self.cancelable)
         
-        self.currentLoc = CLLocationCoordinate2D(latitude: 37.51005, longitude: 127.10280)
+        self.currentLoc = self.석촌호수
         
         self.map.delegate = self.coordiate
         self.locationManager.delegate = self.locationDelegate
@@ -146,9 +147,9 @@ struct CustomMapView : UIViewRepresentable {
         }).store(in: &self.cancelable)
     }
     
-    init(_ model: StoreDetailModel) {
+    init(_ model: StoreDetailModel, moveMap: Bool = true) {
         
-        self.storeList = []
+        self.storeList = [StoreModel(id: model.id, storeImgList: [], metaData: StorePointModel(id: model.id, title: model.storeTitle, location: self.석촌호수, thumbnailUrl: nil), address: model.address, tagList: [], minimumPrice: 0, distance: 0)]
         self.currentLoc = model.loc
         self.locationManager = CLLocationManager()
         
@@ -157,8 +158,7 @@ struct CustomMapView : UIViewRepresentable {
         
         self.locationManager.delegate = self.locationDelegate
         
-        let annotation = StorePointAnnotationOnMap(id: model.id, title: model.storeTitle, locationName: model.address, coordinate: model.loc, model: nil)
-        self.map.addAnnotation(annotation)
+        self.map.isScrollEnabled = moveMap
     }
     
     func makeUIView(context: UIViewRepresentableContext<CustomMapView>) -> MKMapView {

@@ -23,4 +23,9 @@ extension String {
             
         return self.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)
     }
+    
+    var numberWithInt: Int {
+        
+        return Int(self) ?? 0
+    }
 }

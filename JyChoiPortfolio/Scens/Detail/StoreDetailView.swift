@@ -18,8 +18,6 @@ struct StoreInfoModel: Identifiable {
 
 struct StoreDetailView: View {
     
-    @Namespace var faqFirstItem
-    
     @Environment(\.presentationMode) var presentationMode
     
     @State var imgListHeight: CGFloat = 100
@@ -53,11 +51,11 @@ struct StoreDetailView: View {
         self.viewModel.setData(model)
     }
     
-    func getLocationTitle(_ text: String, geo: GeometryProxy) -> some View {
+    private func getLocationTitle(_ text: String, geo: GeometryProxy) -> some View {
         Text(text).font(.spoqaRegular(fontSize: 16)).foregroundColor(.black).frame(width: geo.size.width / 5, alignment: .leading)
     }
     
-    func getLocationText(_ title: String, description: String, geo: GeometryProxy) -> some View {
+    private func getLocationText(_ title: String, description: String, geo: GeometryProxy) -> some View {
         HStack(alignment: .top) {
             self.getLocationTitle(title, geo: geo)
             Text(description).font(.spoqaRegular(fontSize: 16)).foregroundColor(.black)
@@ -65,7 +63,7 @@ struct StoreDetailView: View {
         }.padding(.horizontal, 10).padding(.top, 3)
     }
     
-    func getSectionTitle(title: String) -> some View {
+    private func getSectionTitle(title: String) -> some View {
         VStack {
             Rectangle().fill(Color.lightGray).frame(height: 6).padding(.top, 5)
             HStack {
@@ -74,7 +72,22 @@ struct StoreDetailView: View {
                 Spacer()
             }.padding(.horizontal, 10).padding(.top, 15)
         }
+    }
+    
+    private func getLocationInfo(_ model: DetailViewModel.StoreLocationFeatureModel<String>, geo: GeometryProxy) -> some View {
         
+        switch model {
+        case .address(let title, let data):
+            return self.getLocationText(title, description: data, geo: geo)
+        case .bus(let title, let data):
+            return self.getLocationText(title, description: data, geo: geo)
+        case .feature(let title, let data):
+            return self.getLocationText(title, description: data, geo: geo)
+        case .metro(let title, let data):
+            return self.getLocationText(title, description: data, geo: geo)
+        case .navigation(let title, let data):
+            return self.getLocationText(title, description: data, geo: geo)
+        }
     }
     
     var body: some View {
@@ -171,17 +184,11 @@ struct StoreDetailView: View {
                         
                         self.getSectionTitle(title: "위치")
                         
-                        CustomMapView(self.viewModel.model).frame(height: geo.size.width * 1).padding(.horizontal, 10)
+                        CustomMapView(self.viewModel.model, moveMap: false).frame(height: geo.size.width * 1).padding(.horizontal, 10)
                         
-                        self.getLocationText("주소", description: self.viewModel.model.address, geo: geo)
-                        
-                        if self.viewModel.model.feature != "" {
-                            self.getLocationText("특징", description: self.viewModel.model.feature, geo: geo)
+                        ForEach(self.viewModel.storeLocationFeature) { model in
+                            self.getLocationInfo(model.metaData, geo: geo)
                         }
-                        
-                        self.getLocationText("네비게이션", description: self.viewModel.model.navigationInfo, geo: geo)
-                        self.getLocationText("지하철", description: self.viewModel.model.metroInfo, geo: geo)
-                        self.getLocationText("버스", description: self.viewModel.model.busInfo, geo: geo)
                         
                         Rectangle().fill(Color.lightGray).frame(height: 6).padding(.top, 5)
                         HStack {
@@ -190,12 +197,15 @@ struct StoreDetailView: View {
                             Spacer()
                             Image(systemName: "arrow.down").rotationEffect(showFaq ? .degrees(180) : .degrees(0))
                         }.padding(.horizontal, 10).padding(.vertical, 15).onTapGesture {
-                            withAnimation {
-                                
-                                self.showFaq.toggle()
-                                proxy.scrollTo(self.faqFirstItem, anchor: .bottom)
-                            }
                             
+                            withAnimation(.easeIn(duration: 0.3), {
+                                self.showFaq.toggle()
+                                
+                                _ = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {_ in
+                                    
+                                    proxy.scrollTo("faqItem\(self.viewModel.model.faqList.count)", anchor: .bottom)
+                                })
+                            })
                         }
                         
                         if self.showFaq {
@@ -204,7 +214,7 @@ struct StoreDetailView: View {
                                 HStack(alignment: .top) {
                                     Text(model.id).font(.spoqaMedium(fontSize: 14)).foregroundColor(.gray)
                                     Spacer()
-                                }.padding(.horizontal, 10).id(self.faqFirstItem)
+                                }.padding(10).id("faqItem" + model.id)
                             }
                         }
                         
@@ -256,6 +266,9 @@ struct StoreDetailView: View {
                 }
                 
             })
+        }).overlay(content: {
+            
+            NotificationView(url: self.viewModel.url)
         })
     }
 }
