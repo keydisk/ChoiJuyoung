@@ -69,7 +69,7 @@ class MainViewModel: ObservableObject {
     init() {
       
         #if DEBUG
-        let tagList = [TagModel<Bool>(title: "다락 직영", id: "d1", metaData: false), TagModel<Bool>(title: "24시간", id: "d2", metaData: true), TagModel<Bool>(title: "무료주차", id: "d3", metaData: true)]
+        let tagList = [TagModel<Bool>(title: "직영", id: "d1", metaData: false), TagModel<Bool>(title: "24시간", id: "d2", metaData: true), TagModel<Bool>(title: "무료주차", id: "d3", metaData: true)]
     
         
         let imgList = [ImgElement(id: URL(string: "https://cdn.newsroad.co.kr/news/photo/202403/27876_39619_131.jpg")!), ImgElement(id:URL(string: "https://cdn.newsroad.co.kr/news/photo/202403/27855_39598_1410.jpg")!), ImgElement(id:URL(string: "https://cdn.newsroad.co.kr/news/photo/202402/27738_39450_5613.jpg")!) ]

@@ -29,7 +29,7 @@ final class JyChoiPortfolioUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         
-        let staticText = app.staticTexts["개의 다락 지점이 있습니다."]
+        let staticText = app.staticTexts["개의 지점이 있습니다."]
         staticText.tap()
         
         let element = app.scrollViews["ContentViewScrollLabel"]

@@ -36,7 +36,7 @@ struct ContentView: View {
             
             HStack(spacing: 0) {
                 Text("\(self.viewModel.list.count)").foregroundStyle(.blue)
-                Text("개의 다락 지점이 있습니다.").font(.spoqaRegular(fontSize: 15))
+                Text("개의 지점이 있습니다.").font(.spoqaRegular(fontSize: 15))
                 Spacer()
             }.padding(10).onTapGesture {
                 withAnimation {
