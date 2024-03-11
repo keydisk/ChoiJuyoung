@@ -15,5 +15,5 @@ UIKit, SwiftUI, MapKit, WebKit, SnapKit, Combine, Alamofire, SwiftyJson
 * 폰트는 spoqa 폰트 사용
 
 ## 향후 개선사항
-* FCM을 사용하여 모든 기능을 다 연결해서 외부에서 앱의 원하는 기능으로 연결 되게 구현
-* 
+* 스킴으로 모든 기능을 다 연결해서 외부에서 앱의 원하는 기능으로 연결 되게 구현
+* oauth 사용
