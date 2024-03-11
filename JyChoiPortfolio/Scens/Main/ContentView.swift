@@ -62,14 +62,14 @@ struct ContentView: View {
                             Spacer()
                         }.padding(10).opacity(self.showMap ? 0 : 1)
                         
+                        StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1)
+                        
                         VStack {
                             Image(systemName: "doc.text.magnifyingglass")
                             Text("NFC Reader")
                         }.onTapGesture {
                             self.showNfcReader.toggle()
-                        }
-                        
-                        StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1)
+                        }.opacity(self.showMap ? 0 : 1)
                     }
                 })
                 #if DEBUG
@@ -82,9 +82,6 @@ struct ContentView: View {
             NavigationLink(destination: NFCReaderView(), isActive: self.$showNfcReader, label: {}).hidden()
             
             Spacer()
-        }.onAppear {
-            
-//            UIScrollView.appearance().isPagingEnabled = false
         }
     }
     

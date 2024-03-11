@@ -17,14 +17,34 @@ class NFCViewModel: NSObject, ObservableObject {
     
     var nfcSession: NFCNDEFReaderSession!
     
-    @Published var nfcInfo: Data?
-    @Published var nfcInfoText = ""
+    @Published var readNfcInfo: Data?
+    @Published var readNfcInfoText  = ""
+    @Published var writeNfcInfoText = ""
     
     override init() {
         
         super.init()
         
         self.nfcSession = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
+    }
+    
+    func beginSession() {
+        
+        guard NFCNDEFReaderSession.readingAvailable else {
+            ToastMessage.shared.setMessage("이 장치는 nfc 스캔을 지원하지 않습니다.")
+            return
+        }
+        
+        self.nfcSession.begin()
+    }
+    
+    func stopSession() {
+        
+        self.nfcSession.invalidate()
+    }
+    
+    func writeNfcData() {
+        
     }
 }
 
@@ -46,8 +66,61 @@ extension NFCViewModel: NFCNDEFReaderSessionDelegate {
             }
             
             self.readedNfcInfo.send(tag)
-            self.nfcInfoText = tag.base64EncodedString()
+            self.readNfcInfoText = tag.base64EncodedString()
             break
         }
+    }
+    
+    
+    
+    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [any NFCNDEFTag]) {
+        
+        guard let tag = tags.first else {
+            
+            session.restartPolling()
+            return
+        }
+        
+        session.connect(to: tag, completionHandler: {error in
+            guard error == nil else {
+                return
+            }
+            
+            tag.queryNDEFStatus(completionHandler: {[weak self] status, capacity, error in
+                
+                switch status {
+                case .notSupported:
+                    
+                    ToastMessage.shared.setMessage("태그를 쓸 수 없습니다.")
+                    break
+                case .readOnly:
+                    ToastMessage.shared.setMessage("태그를 쓸 수 없습니다.")
+                    break
+                case .readWrite:
+                    
+                    guard let msg = self?.writeNfcInfoText.data(using: .utf8), 
+                          let len = self?.writeNfcInfoText.count, len > capacity,
+                          let nfcMsg = NFCNDEFMessage(data: msg) else {
+                        
+                        ToastMessage.shared.setMessage("테그 쓰기 실패")
+                        return
+                    }
+                    
+                    Task {
+                        do {
+                            try await tag.writeNDEF(nfcMsg)
+                            ToastMessage.shared.setMessage("테그 쓰기 성공")
+                        } catch let error {
+                            ToastMessage.shared.setMessage("테그 쓰기 실패")
+                        }
+                    }
+                    
+                    break
+                default:
+                    break
+                }
+            })
+        })
+        
     }
 }
