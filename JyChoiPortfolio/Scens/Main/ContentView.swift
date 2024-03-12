@@ -62,10 +62,12 @@ struct ContentView: View {
                         
                         HStack(spacing: 0) {
                             Text("가까운 거리순").onTapGesture {
-                                self.selectSorting(.distance)
+                                
+                                self.viewModel.selectOption = .distance
                             }.foregroundColor(self.setSortingTextColor(self.viewModel.selectOption == .distance))
                             Text("낮은 가격순").padding(.leading, 10).onTapGesture {
-                                self.selectSorting(.price)
+                                
+                                self.viewModel.selectOption = .price
                             }.foregroundColor(self.setSortingTextColor(self.viewModel.selectOption == .price))
                             Spacer()
                         }.padding(10).opacity(self.showMap ? 0 : 1)
@@ -86,10 +88,6 @@ struct ContentView: View {
         }
     }
     
-    private func selectSorting(_ type: SortingType) {
-        
-        self.viewModel.selectOption = type
-    }
     
     private func setSortingTextColor(_ selected: Bool) -> Color {
         
