@@ -15,7 +15,7 @@ enum SortingType {
     case price
 }
 
-class MainViewModel: ObservableObject {
+class MainViewModel: CommonViewModel {
     
     /// 검색 키워드
     @Published var searchText = "" {
@@ -66,8 +66,11 @@ class MainViewModel: ObservableObject {
     var cancelationList  = Set<AnyCancellable>()
     
     
-    init() {
+    override init() {
       
+        self.selectOption = .distance
+        
+        super.init()
         #if DEBUG
         let tagList = [TagModel<Bool>(title: "직영", id: "d1", metaData: false), TagModel<Bool>(title: "24시간", id: "d2", metaData: true), TagModel<Bool>(title: "무료주차", id: "d3", metaData: true)]
     
@@ -88,12 +91,11 @@ class MainViewModel: ObservableObject {
         self.list = self.originList
         #endif
         
-        self.selectOption = .distance
         self.selectModel  = StoreModel(id: "", storeImgList: [], metaData: StorePointModel(id: "3", title: "롯데월드점", location: CLLocationCoordinate2D(latitude: 37.51133, longitude: 127.09626), thumbnailUrl: nil), address: "", tagList: [], minimumPrice: 0, distance: 0)
         
-        self.selectStoreModel.sink(receiveValue: {model in
+        self.selectStoreModel.sink(receiveValue: {[unowned self] model in
             
-            self.selectModel = model
+            self.selectModel    = model
             self.moveDetailView = true
         }).store(in: &self.cancelationList)
         

@@ -22,6 +22,8 @@ struct ContentView: View {
     
     @State var showMap = false
     @State var showNfcReader = false
+    @FocusState private var isFocus: Bool
+    
     var listHeight: CGFloat = 0
     
     private var region: MKCoordinateRegion {
@@ -31,13 +33,19 @@ struct ContentView: View {
         
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                RoundTextField(round: 10, text: self.$viewModel.searchText, placeHolder: "insert text", edge: EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)).frame(height: 40)
+                RoundTextField(round: 10, text: self.$viewModel.searchText, keyboardFocus: $isFocus, placeHolder: "insert text", edge: EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)).focused(self.$isFocus).frame(height: 40)
             }.padding(.horizontal, 10)
             
             HStack(spacing: 0) {
                 Text("\(self.viewModel.list.count)").foregroundStyle(.blue)
                 Text("개의 지점이 있습니다.").font(.spoqaRegular(fontSize: 15))
                 Spacer()
+                VStack {
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text("NFC Reader")
+                }.onTapGesture {
+                    self.showNfcReader.toggle()
+                }.opacity(self.showMap ? 0 : 1)
             }.padding(10).onTapGesture {
                 withAnimation {
                     
@@ -62,14 +70,7 @@ struct ContentView: View {
                             Spacer()
                         }.padding(10).opacity(self.showMap ? 0 : 1)
                         
-                        StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1)
-                        
-                        VStack {
-                            Image(systemName: "doc.text.magnifyingglass")
-                            Text("NFC Reader")
-                        }.onTapGesture {
-                            self.showNfcReader.toggle()
-                        }.opacity(self.showMap ? 0 : 1)
+                        StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1).padding(.bottom, self.viewModel.keyboardHeight)
                     }
                 })
                 #if DEBUG

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C01B54C02BA01C0E00CBEE13 /* CommonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01B54BF2BA01C0E00CBEE13 /* CommonViewModel.swift */; };
 		C020D3D72B9EB971002D3E6B /* RefeatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3D62B9EB971002D3E6B /* RefeatModel.swift */; };
 		C020D3D92B9EBF84002D3E6B /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3D82B9EBF84002D3E6B /* NotificationView.swift */; };
 		C020D3DB2B9EBFE6002D3E6B /* CommonWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C020D3DA2B9EBFE6002D3E6B /* CommonWebView.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C01B54BF2BA01C0E00CBEE13 /* CommonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewModel.swift; sourceTree = "<group>"; };
 		C020D3D62B9EB971002D3E6B /* RefeatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefeatModel.swift; sourceTree = "<group>"; };
 		C020D3D82B9EBF84002D3E6B /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		C020D3DA2B9EBFE6002D3E6B /* CommonWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWebView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C01B54BE2BA01BFE00CBEE13 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C01B54BF2BA01C0E00CBEE13 /* CommonViewModel.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		C020D3D52B9EB964002D3E6B /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,6 +281,7 @@
 		C0DAE8762B9869DB007D194F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				C01B54BE2BA01BFE00CBEE13 /* Common */,
 				C0DAE8772B986AE1007D194F /* MainViewModel.swift */,
 				C0DAE8AA2B99BB7C007D194F /* DetailViewModel.swift */,
 				C020D3DE2B9ECD3A002D3E6B /* NFCViewModel.swift */,
@@ -567,6 +578,7 @@
 				C0BAA0952B9EA69E00B9E530 /* StoreImgView.swift in Sources */,
 				C0DAE88E2B9934D2007D194F /* ColorExtension.swift in Sources */,
 				C020D3D92B9EBF84002D3E6B /* NotificationView.swift in Sources */,
+				C01B54C02BA01C0E00CBEE13 /* CommonViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
