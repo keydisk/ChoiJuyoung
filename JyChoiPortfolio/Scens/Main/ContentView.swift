@@ -7,87 +7,192 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
-#if DEBUG
 public struct ContentViewConstValue {
     
     static let scrollLabel = "ContentViewScrollLabel"
+    static let topScrollPosition = "topScrollPosition"
 }
-#endif
 
-/// 메인 뷰
-struct ContentView: View {
 
-    @ObservedObject var viewModel = MainViewModel()
+struct EmptyView: View {
     
-    @State var showMap = false
-    @State var showNfcReader = false
-    @FocusState private var isFocus: Bool
-    
-    var listHeight: CGFloat = 0
-    
-    private var region: MKCoordinateRegion {
-        MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 127.10280, longitude: 37.51005), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-    }
     var body: some View {
         
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                RoundTextField(round: 10, text: self.$viewModel.searchText, keyboardFocus: $isFocus, placeHolder: "insert text", edge: EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)).focused(self.$isFocus).frame(height: 40)
-            }.padding(.horizontal, 10)
-            
-            HStack(spacing: 0) {
-                Text("\(self.viewModel.list.count)").foregroundStyle(.blue)
-                Text("개의 지점이 있습니다.").font(.spoqaRegular(fontSize: 15))
-                Spacer()
-                VStack {
-                    Image(systemName: "doc.text.magnifyingglass")
-                    Text("NFC Reader")
-                }.onTapGesture {
-                    self.showNfcReader.toggle()
-                }.opacity(self.showMap ? 0 : 1)
-            }.padding(10).onTapGesture {
-                withAnimation {
-                    
-                    self.showMap = !self.showMap
-                }
-            }
-            
-            ZStack {
-                CustomMapView(self.viewModel.list, self.viewModel.selectStoreModel).opacity(self.showMap ? 1 : 0)
-                
-                GeometryReader(content: { geometry in
-                    
-                    VStack(spacing: 0) {
-                        
-                        HStack(spacing: 0) {
-                            Text("가까운 거리순").onTapGesture {
-                                
-                                self.viewModel.selectOption = .distance
-                            }.foregroundColor(self.setSortingTextColor(self.viewModel.selectOption == .distance))
-                            Text("낮은 가격순").padding(.leading, 10).onTapGesture {
-                                
-                                self.viewModel.selectOption = .price
-                            }.foregroundColor(self.setSortingTextColor(self.viewModel.selectOption == .price))
-                            Spacer()
-                        }.padding(10).opacity(self.showMap ? 0 : 1)
-                        
-                        StoreList(listModels: self.$viewModel.list, refreshList: self.$viewModel.refreshList, selectModel: self.viewModel.selectStoreModel).padding(.top, self.showMap ? geometry.size.height : 10.0).opacity(self.showMap ? 0 : 1).padding(.bottom, self.viewModel.keyboardHeight)
-                    }
-                })
-                #if DEBUG
-                .accessibilityLabel(ContentViewConstValue.scrollLabel)
-                #endif
-            }
-            
-            NavigationLink(destination: StoreDetailView(self.viewModel.selectModel!), isActive: self.$viewModel.moveDetailView, label: {}).hidden()
-            
-            NavigationLink(destination: NFCReaderView(), isActive: self.$showNfcReader, label: {}).hidden()
-            
+        VStack(content: {
             Spacer()
+            HStack {
+                Spacer()
+                Text("검색된 리스트가 없습니다.")
+                Spacer()
+            }
+            Spacer()
+        })
+    }
+}
+
+struct RoundedBackground: Shape {
+    let cornerRadius: CGFloat
+    
+    func path(in rect: CGRect) -> Path {
+        RoundedRectangle(cornerRadius: cornerRadius).path(in: rect)
+    }
+}
+
+struct SelectSearchType: View {
+    
+    let viewModel: MainViewModel
+    @Binding var selectType: SearchTarget
+    
+    /// 아이콘
+    func getIconFromSearchType(_ type: SearchTarget) -> Image {
+        
+        switch type {
+        case .isbn:
+            return Image(systemName: "barcode.viewfinder")
+        case .title:
+            return Image(systemName: "textformat.subscript")
+        case .publisher:
+            return Image(systemName: "printer")
+        case .person:
+            return Image(systemName: "person.bubble")
         }
     }
     
+    var body: some View {
+        HStack {
+            
+            ForEach(SearchTarget.searchList, content: {model in
+                
+                ZStack {
+                    VStack {
+                        self.getIconFromSearchType(model.metaData)
+                        Text("\(model.metaData.printText)").foregroundColor(.gray).font(.spoqaMedium(fontSize: 13))
+                    }
+                    .onTapGesture {
+                        // 선택된 아이콘 처리
+                        withAnimation {
+                            
+                            self.viewModel.setSelectTarget(model.metaData)
+                        }
+                        
+                    }
+                    
+                    RoundedBackground(cornerRadius: 10)
+                        .stroke(model.metaData == selectType ? Color.black : Color.clear, lineWidth: 1)
+                        .scaledToFit().padding(10)
+                }
+            })
+        }
+    }
+}
+
+/// 메인 뷰
+struct ContentView: View {
+    
+    @ObservedObject var viewModel = MainViewModel()
+    @State private var isFocus: Bool = false
+    @State private var showAppleLogin: Bool = false
+    
+    @State var moveView = false
+    @State var pushMoveView = false
+    
+    var listHeight: CGFloat = 0
+    var cancelList = Set<AnyCancellable>()
+    var cancel: AnyCancellable?
+    @State var showSearchType = false
+    @EnvironmentObject var pushType: ExternalPushViewModel
+    
+    private func drawSortingOption(_ option: SortingType) -> some View {
+        
+        Text(option.title).onTapGesture {
+            self.viewModel.selectSorting(option)
+        }.foregroundColor(self.setSortingTextColor(self.viewModel.sortingOption == option))
+    }
+    
+    var body: some View {
+        
+        ZStack {
+            VStack(spacing: 0) {
+                
+                Text("검색 타겟").modifier(HorizontalTextModifier(isTitle: true, align: .leading, edges: (.horizontal, 10) ))
+                SelectSearchType(viewModel: self.viewModel, selectType: self.$viewModel.target)
+                
+                HStack(spacing: 0) {
+                    
+                    RoundTextField(round: 10, text: self.$viewModel.searchText, keyboardFocus: $isFocus, placeHolder: "insert text", edge: EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 5)).frame(height: 40)
+                }.padding(.horizontal, 10)
+                
+                HStack(spacing: 0) {
+                    
+                    Text("\(self.viewModel.pageModel.totalCnt)").foregroundColor(.blue)
+                    Text("개의 검색 결과").font(.spoqaRegular(fontSize: 15))
+                    
+                    Spacer()
+                    self.drawSortingOption(.accuracy)
+                    self.drawSortingOption(.latest).padding(.leading, 10)
+                }.padding(10)
+                
+                VStack(spacing: 0) {
+                    
+                    if self.viewModel.list.count == 0 {
+                        
+                        EmptyView()
+                    } else {
+                        BookList(listModels: self.$viewModel.list, viewModel: self.viewModel).padding(.top, 10.0)
+                    }
+                }.accessibilityLabel(ContentViewConstValue.scrollLabel)
+                
+                Spacer()
+            }
+            .sheet(isPresented: $showAppleLogin, content: {
+                
+                LoginView()
+            })
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    VStack {
+                        Image(systemName: "person.badge.key").onTapGesture {
+                            
+                            self.showAppleLogin.toggle()
+                        }
+                        Text("로그인")
+                    }
+                    
+                }
+            }.padding(.trailing, 20).padding(.bottom, 20)
+            
+            NavigationLink(destination: BookInfoDetailView(model: self.viewModel.selectBookModel.value), isActive: self.$viewModel.moveDetailView, label: {}).hidden()
+        }
+        .sheet(isPresented: $pushMoveView, content: {
+            if case .moveWebPage(let url) = self.pushType.moveType {
+                
+                NavigationView(content: {
+                    WebView(url: url)
+                })
+                
+            } else if case .detailBook(let model) = self.pushType.moveType {
+                
+                NavigationView(content: {
+                    BookInfoDetailView(model: model)
+                })
+            }
+        })
+        .onReceive(self.pushType.movePushType, perform: { model in
+            
+            self.pushMoveView = true
+        })
+    }
+    
+    /// 검색 옵션 선택
+    private func selectSorting(_ type: SortingType) {
+        
+        self.viewModel.sortingOption = type
+    }
     
     private func setSortingTextColor(_ selected: Bool) -> Color {
         

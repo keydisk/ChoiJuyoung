@@ -15,9 +15,9 @@ import Alamofire
 class APIClient {
     
     static let shared = APIClient()
-    let defaultHeader: HTTPHeaders = [:]
+    let defaultHeader: HTTPHeaders = ["Content-type":"application/json; charset= utf-8"]
     
-    /// 통신 모듈 (Combine으로 구현) 
+    /// 통신 모듈 (Combine으로 구현)
     ///
     /// - Parameters:
     ///   - url: url path 부분
@@ -36,7 +36,12 @@ class APIClient {
             
             if method == .get {
                 
-                dataRequest = AF.request(callUrl, method: method, parameters: param, headers: self.defaultHeader)
+                var sendHeader = self.defaultHeader
+                header.forEach({data in
+                    sendHeader[data.name] = data.value
+                })
+                
+                dataRequest = AF.request(callUrl, method: method, parameters: param, headers: sendHeader)
                 
             } else {
                 
@@ -54,7 +59,11 @@ class APIClient {
                 dataRequest = AF.request(request)
             }
             
-            debugPrint("callUrl : \(callUrl) param: \(param)")
+            #if DEBUG
+            if CommonConstValue.showNetworkLog {
+                print("url : \(url) param : \(param) ")
+            }
+            #endif
             
             dataRequest.validate(statusCode: 200..<300)
                 .responseData(completionHandler: {responseData in
@@ -63,7 +72,11 @@ class APIClient {
                     
                     if let error = responseData.error {
                         
-                        debugPrint("error : \(error)")
+#if DEBUG
+                        if CommonConstValue.showNetworkLog {
+                            print("error : \(error)")
+                        }
+                        #endif
                         combine.send(completion: .failure(error as NSError) )
                     } else {
                         
@@ -79,7 +92,12 @@ class APIClient {
                 combine.send(completion: .finished)
             })
         } catch let error {
-            debugPrint("error : \(error)")
+            #if DEBUG
+            if CommonConstValue.showNetworkLog {
+                print("error : \(error)")
+            }
+            #endif
+            combine.send(completion: .failure(error as NSError) )
         }
         
         return combine

@@ -8,57 +8,84 @@
 import Combine
 import Foundation
 import UIKit
-
+import SwiftyJSON
+import Combine
 
 /// 상세로 이동
 class DetailViewModel: ObservableObject {
     
-    /// 지점 상세 모델
-    enum StoreLocationFeatureModel<T> {
-        
-        case address(T, T)
-        case feature(T, T)
-        case navigation(T, T)
-        case metro(T, T)
-        case bus(T, T)
-        
-    }
+    let api = SearchAPIs()
+    var model: BookModel?
     
-    @Published var url: String = "https://www.naver.com"
-    var model: StoreDetailModel!
+    @Published var samePulisherList: [BookModel] = []
+    @Published var sameAuthList: [BookModel] = []
+    @Published var selectModel: BookModel!
     
-    var storeLocationFeature: [RefeatModel<StoreLocationFeatureModel<String>>] = []
     
-    func setData(_ model: StoreModel) {
-        
-        self.model = StoreDetailModel(id: model.id, storeTitle: model.metaData.title, address: model.address, useGuide: "매일 24시간 운영됩니다.", parkingGuide: "건물 후면 지상 주차장에 주차 가능하며, 1시간 무료 주차 지원 합니다.", securityAndEntrance: ".[이용하기] 신청 후 이용 시작일부터 혹은 [즉시 방문] 신청 후 1시간 동안 지점 출입이 가능합니다.", wifiInfo: [StoreDetailModel.WifiInfo(bandWidth: "2.4G", id: "dalock", pw: "dalockP"), StoreDetailModel.WifiInfo(bandWidth: "5G", id: "dalock", pw: "dalockP")], storageInfo: StoreDetailModel.StorageUnitInfo(imgUrl: URL(string: "https://gaguclub.co.kr/web/product/big/202106/32c00bf64ca6736c4a07af409300cfe1.jpg")!, description: "계절옷 넣는데 최적화된 사이즈"), feature: "", navigationInfo: "검색창 또는 내비게이션에 '올림픽공원점'이나 '백제 고분로 505' 검색", metroInfo: "한성백제역 1번출구", busInfo: "333, 340", faqList: [RefeatModel(id: "1", metaData: ("1. 카트나 사디리가 있나요?", "물품 보관을 위한 카트 및 사다리가 구비 되어 있습니다.") ), RefeatModel(id: "2", metaData: ("2. 카트나 사디리가 있나요?", "22 물품 보관을 위한 카트 및 사다리가 구비 되어 있습니다.") )], loc: model.metaData.location )
-
-        
-        self.storeLocationFeature = [RefeatModel(id: "1", metaData: .address("주소", self.model.address)), RefeatModel(id: "2", metaData: .address("네비게이션", self.model.navigationInfo)), RefeatModel(id: "3", metaData: .metro("지하철", self.model.metroInfo)), RefeatModel(id: "4", metaData: .address("버스", self.model.busInfo))]
-    }
+    var sendDataUpperView = PassthroughSubject<BookModel, Never>()
     
-    var shareAddress: String {
-        self.model.address
-    }
-    
-    /// 선택된 아이콘타입에서 정보 조회
-    func storeInfo(_ type: IconType) -> String {
-        
-        switch type {
-        case .useGuide:
-            return self.model.useGuide
-        case .parking:
-            return self.model.parkingGuide
-        case .secureAndEnter:
-            return self.model.securityAndEntrance
-        case .wifiInfo:
-            return self.model.printWifiInfo
-        }
-    }
-    
+    /// 클립보드 복사
     func setClipboard(_ text: String) {
         
         UIPasteboard.general.string = text
         ToastMessage.shared.setMessage("\(text)가 클립보드에 복사 되었습니다.")
     }
+    
+    var anyCancelation: AnyCancellable?
+    
+    /// 작가와 출판사
+    func requestData() {
+        
+        guard let model = self.model, let author = model.authors.first else {
+            return
+        }
+        
+        // 같은 작가와 같은 출판사를 동시에 조회해야 해서 컴바인을 merge로 묶음
+        self.anyCancelation?.cancel()
+        self.anyCancelation = self.api.requestBookList(text: author, target: .person, sortingOption: .latest, pageNo: 1, size: PageDataModel.pageSize).merge(with: self.api.requestBookList(text: model.publisher, target: .publisher, sortingOption: .latest, pageNo: 1, size: PageDataModel.pageSize) ).receive(on: DispatchQueue.main).sink(receiveCompletion: {complete in
+            
+            switch complete {
+            case .finished:
+                break
+            case .failure(_) :
+                break
+            }
+        }, receiveValue: {[weak self] data in
+            
+            do {
+                
+                let json = JSON(data)
+                
+                var list = try JSONDecoder().decode([BookModel].self, from: json["documents"].rawData())
+                var lastId = Int(1)
+                
+                list = list.filter({model in
+                    model.isbn != self?.model?.isbn
+                }).map({model in
+                    
+                    var model = model
+                    
+                    model.index = lastId
+                    model.id    = "\(lastId)"
+                    
+                    lastId += 1
+                    
+                    return model
+                })
+                
+                if json[SearchAPIs.searchType].string == SearchTarget.person.rawValue {
+                    
+                    self?.sameAuthList     = list
+                } else if json[SearchAPIs.searchType].string == SearchTarget.publisher.rawValue {
+                    
+                    self?.samePulisherList = list
+                }
+                
+            } catch let error {
+                
+                print("receiveValue error : \(error)")
+            }
+        })
+    }
+    
 }
